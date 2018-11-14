@@ -2,6 +2,9 @@
 # save map
 # load map
 
+PImage imgBrokenGlass
+PImage imgStone
+PImage imgTree
 
 timeIt = 0
 fieldSize = 25
@@ -13,6 +16,10 @@ def setup():
     size(800, 600, P2D) # better performans for 2d
     background(0, 0, 0)
     frameRate(60)
+    
+    imgBrokenGlass = requestImage("brokenGlass.png")
+    imgStone = loadImage("stone.png");
+    imgTree = loadImage("tree.png");
 
 def gameField(): # draw fields
     stroke(127)
@@ -82,4 +89,12 @@ def draw():
     if len(aList[0]) > 1:
         wall()
         
+    image(imgBrokenGlass, 0, 0);
+    image(imgStone, 0, 0);
+    image(imgTree, 0, 0);
+    # image(img, 0, 0, width/2, height/2);
+        
+
+
+  
     
