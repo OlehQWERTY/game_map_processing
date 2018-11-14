@@ -5,81 +5,76 @@ aList = [[], []]
 print(aList)
 
 def setup():
-    size(800, 600, P2D)
+    size(800, 600, P2D) # better performans for 2d
     background(0, 0, 0)
     frameRate(60)
 
-def gameField():
+def gameField(): # draw fields
     stroke(127)
+    strokeWeight(1)
     fill(255)
     for n in range(0, width, fieldSize):
         for m in range(0, height, fieldSize):
             rect(n, m, fieldSize, fieldSize) 
-            
-def wall():
+
+def wall(): # draw rects
     stroke(12)
+    strokeWeight(1)
     fill(0)
     for i in range(len(aList[0])):
-        # print(aList[0][i])
-        # print("_________________")
         rect(int(aList[0][i]) * fieldSize, int(aList[1][i]) * fieldSize, fieldSize, fieldSize)
-        
-def select(x, y, a = 0):
-    if a == 1:
-        stroke(127, 0, 127)
-    else:
-        stroke(12)
-    
+
+def select(posX, posY): # light of selected field 
+    stroke(127, 0, 127)
+    strokeWeight(2)
+    rect(int(posX) * fieldSize, int(posY) * fieldSize, fieldSize, fieldSize)
+
 def mouse():
-    if  mousePressed:
+    posX = int(mouseX/fieldSize)
+    posY = int(mouseY/fieldSize)
+    if  mousePressed and (mouseButton == LEFT):
         fill(127,255)
-        print(mouseX, mouseY)
-        # wall(x, y)
-        
-        aList[0].append(int(mouseX/fieldSize))
-        aList[1].append(int(mouseY/fieldSize))
-        # wall(int(mouseX/fieldSize), int(mouseY/fieldSize))
+        # print(type(aList))
+        if len(aList[0]) <= 1:
+            aList[0].append(posX)
+            aList[1].append(posY)
+        else:
+            print(len(aList[0]))
+            if not checkElementInList(posX, posY):
+                aList[0].append(posX)
+                aList[1].append(posY)
+    elif mousePressed and (mouseButton == RIGHT):
+        if checkElementInList(posX, posY):
+            index = checkElementInList(posX, posY, True)
+            del aList[0][index]
+            del aList[1][index]
     else:
-        int(mouseX/fieldSize)
-        int(mouseY/fieldSize)
         fill(255)
-        
-    ellipse(mouseX, mouseY, 10, 10)
-    # wall(int(mouseX/fieldSize), int(mouseY/fieldSize))
-    return mouseX, mouseY
+    return posX, posY
     
-    
+def checkElementInList(x, y, mode = False):
+    for i in range(len(aList[0])):
+        if aList[0][i] == x and aList[1][i] == y:
+            if not mode: 
+                return True
+            else:
+                return i
+    return False
     
 def draw():
     gameField()
     global timeIt
-    global x, y
     timeIt += 1
 
-    # if not timeIt % 60:
+    # if not timeIt % 60: # ones per second
     #     x = random(0, width / fieldSize)
     #     y = random(0, height / fieldSize)
     #     # print(int(random(0, width / fieldSize)))
-        
-    # wall(x, y)
 
-    x, y = mouse() 
-    print(x, y)
-    if len(aList[0]) > 2:
+    posX, posY = mouse() 
+    print(posX, posY)
+    select(posX, posY)
+    if len(aList[0]) > 1:
         wall()
         
-    select(int(x/fieldSize), int(y/fieldSize), a = 0)
     
-    
-    
-    # line(12, 25, 56, 85)
-    
-            
-            # print(n)
-            
-            
-    # if  mousePressed:
-    #     fill(0)
-    # else:
-    #     fill(255)
-    # ellipse(mouseX, mouseY, 80, 80)
