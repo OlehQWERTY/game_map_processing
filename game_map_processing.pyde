@@ -1,5 +1,10 @@
+# add different types of materials
+# save map
+# load map
+
+
 timeIt = 0
-fieldSize = 50
+fieldSize = 25
 aList = [[], []]
 
 print(aList)
