@@ -4,10 +4,11 @@
 # add check material number < numberOfMaterials
 
 import os.path # cheacking whether file exist
+import time # pouse func
 #PrintWriter output
 
 timeIt = 0
-fieldSize = 10
+fieldSize = 100
 aList = [[], [], []] # posX posY matterial
 tool = 0 # chosen tool
 
@@ -28,11 +29,14 @@ def setup():
     global imgBrokenGlass
     global imgStone
     global imgTree
+    global imgLoad
+    global imgSave
     
     imgBrokenGlass = loadImage("brokenGlass.png")
     imgStone = loadImage("stone.png")
     imgTree = loadImage("tree.png")
-
+    imgLoad = loadImage("load.png")
+    imgSave = loadImage("save.png")
 
 def gameField(): # draw fields
     stroke(127)
@@ -79,6 +83,14 @@ def mouse():
                     aList[1].append(posY)
                     aList[2].append(tool) # matterial
                     
+                    # global tool
+                    # if(tool > 2): # if tools > 2 (not 0, 1, 2)
+                    #     print("Error: not possible color!")
+                    #     tool = 0
+                    # else:
+                    #     print(tool)
+                    #     aList[2].append(tool) # matterial
+                    
         tPos = toolsPos(posX, posY)
         # print("tPos %d" % tPos)
         # print(tPos)
@@ -91,6 +103,17 @@ def mouse():
             #     print("Stone")
             # if tPos == 2:
             #     print("Wood")
+            
+            if tPos == 5:
+                print("Load")
+                load()
+                
+                time.sleep(1)
+            if tPos == 6:
+                print("Save")
+                global saveRes
+                saveRes = save(saveRes+1)
+                time.sleep(1)
             
     elif mousePressed and (mouseButton == RIGHT):
         if checkElementInList(posX, posY):
@@ -117,13 +140,58 @@ def toolsPos(posX, posY):
     if posY >= (height - toolsZone)/fieldSize:
         iterToolsX = width/toolsZone
         for i in range(iterToolsX, -1, -1): # -1 because of min toolsPos is 0, next -1 is iterator
-            print((toolsZone/fieldSize))
+            # print((toolsZone/fieldSize))
             if posX >= i*(toolsZone/fieldSize):  
                 # print("Tools Zone! %d" % i)
                 return i
                 break
     return -1
 
+def is_number(s): # checking string is_number
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+ 
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+ 
+    return False
+
+def load():
+    i = 0
+    dirPath = "C:/Git/game_map_processing/"
+    filePath = "maps/map" + "load" + ".txt"
+    if os.path.isfile(dirPath + filePath):
+        lines = loadStrings(dirPath + filePath)
+        for line in lines:
+            # print(line + "kfjgnf" + str(i))
+            line = line.replace("[", "")
+            line = line.replace("]", "")
+            line.split(',')
+            # print(line)
+            if i == 0 or i == 2 or i == 4: # i = 1, 3, 5 is /n strings
+                # print(line + "kfjgnf" + str(i))
+                for val in line:
+                    # print(val)
+                    # val.replace(",", "")
+                    print(val)
+                    if is_number(val): # other lines is ',' lines
+                        if i == 0:
+                            aList[i].append(int(val)) 
+                        else:
+                            aList[i/2].append(int(val))    
+            i+=1
+            
+        
+    else:
+        print("Error: can't open mapload.txt or file doesn't exist!")
+    
 def save(i = 0):
     # print(i)
     dirPath = "C:/Git/game_map_processing/"
@@ -141,7 +209,7 @@ def save(i = 0):
             output.println("%s\n" % item)
         
         # output = createWriter(str(filePath))
-        output.println(str(i)) # Write the coordinate to the file
+        # output.println(str(i)) # Write the coordinate to the file
         output.flush() # Writes the remaining data to the file
         output.close() # Finishes the file
         
@@ -171,7 +239,6 @@ def draw():
         # saveRes = save(saveRes+1)
         pass
 
-        
     #     x = random(0, width / fieldSize)
     #     y = random(0, height / fieldSize)
     #     # print(int(random(0, width / fieldSize)))
@@ -188,7 +255,12 @@ def draw():
     global imgBrokenGlass
     global imgStone
     global imgTree
+    global imgLoad
+    global imgSave
     
     image(imgBrokenGlass, 0, height - toolsZone, toolsZone, toolsZone)
     image(imgStone, toolsZone, height - toolsZone, toolsZone, toolsZone)
     image(imgTree, toolsZone * 2, height - toolsZone, toolsZone, toolsZone)
+    
+    image(imgLoad, toolsZone * 5, height - toolsZone, toolsZone, toolsZone)
+    image(imgSave, toolsZone * 6, height - toolsZone, toolsZone, toolsZone)
