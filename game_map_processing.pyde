@@ -7,7 +7,7 @@ import os.path # cheacking whether file exist
 #PrintWriter output
 
 timeIt = 0
-fieldSize = 100
+fieldSize = 10
 aList = [[], [], []] # posX posY matterial
 tool = 0 # chosen tool
 
@@ -113,10 +113,12 @@ def checkElementInList(x, y, mode = False):
 
 def toolsPos(posX, posY):
     # tools pos
-    if posY > (height - toolsZone)/fieldSize:
-        iterToolsX = width/fieldSize/4
+    # print(posX)
+    if posY >= (height - toolsZone)/fieldSize:
+        iterToolsX = width/toolsZone
         for i in range(iterToolsX, -1, -1): # -1 because of min toolsPos is 0, next -1 is iterator
-            if posX >= i*4:  
+            print((toolsZone/fieldSize))
+            if posX >= i*(toolsZone/fieldSize):  
                 # print("Tools Zone! %d" % i)
                 return i
                 break
@@ -187,6 +189,6 @@ def draw():
     global imgStone
     global imgTree
     
-    image(imgBrokenGlass, 0, height - toolsZone, 100, 100)
-    image(imgStone, 100, height - toolsZone, 100, 100)
-    image(imgTree, 200, height - toolsZone, 100, 100)
+    image(imgBrokenGlass, 0, height - toolsZone, toolsZone, toolsZone)
+    image(imgStone, toolsZone, height - toolsZone, toolsZone, toolsZone)
+    image(imgTree, toolsZone * 2, height - toolsZone, toolsZone, toolsZone)
