@@ -3,17 +3,16 @@
 # load map
 # add check material number < numberOfMaterials
 
-# imgBrokenGlass = PImage
-# imgStone = PImage
-# imgTree = PImage 
+import os.path # cheacking whether file exist
+#PrintWriter output
 
 timeIt = 0
-fieldSize = 25
+fieldSize = 100
 aList = [[], [], []] # posX posY matterial
 tool = 0 # chosen tool
 
 materials = [[255, 0, 20], [0, 255, 20], [0, 20, 255]]
-
+saveRes = 0
 
 # print(aList)
 
@@ -48,8 +47,8 @@ def wall(): # draw rects
     stroke(12)
     strokeWeight(1)
     for i in range(len(aList[0])):
-        print(materials[1])
-        print(aList[2][1])
+        # print(materials[1])
+        # print(aList[2][1])
         fill(materials[aList[2][i]][0], materials[aList[2][i]][1], materials[aList[2][i]][2]) # color according to material
         rect(int(aList[0][i]) * fieldSize, int(aList[1][i]) * fieldSize, fieldSize, fieldSize)
 
@@ -81,11 +80,11 @@ def mouse():
                     aList[2].append(tool) # matterial
                     
         tPos = toolsPos(posX, posY)
-        print("tPos %d" % tPos)
+        # print("tPos %d" % tPos)
         # print(tPos)
         if tPos != -1:
             tool = tPos
-            print("tPos %d" % tPos)
+            # print("tPos %d" % tPos)
             # if tPos == 0:
             #     print("Glass")
             # if tPos == 1:
@@ -122,6 +121,41 @@ def toolsPos(posX, posY):
                 return i
                 break
     return -1
+
+def save(i = 0):
+    # print(i)
+    dirPath = "C:/Git/game_map_processing/"
+    filePath = "maps/map" + str(i) + ".txt"
+    
+    if os.path.isfile(dirPath + filePath):
+        print("File: " + filePath + " in: " + filePath + " is already exist!")
+        return save(i + 1)
+    else:
+        
+        output = createWriter(str(filePath))
+        
+        global aList
+        for item in aList:
+            output.println("%s\n" % item)
+        
+        # output = createWriter(str(filePath))
+        output.println(str(i)) # Write the coordinate to the file
+        output.flush() # Writes the remaining data to the file
+        output.close() # Finishes the file
+        
+        print("Saved")
+        return i
+    
+    # print(os.path.abspath(filePath)) # saves to C:\Users\Oleg\AppData\Local\Temp\game_map_processing1973036018282129998\maps\map0.txt
+    # print(dirPath + filePath)
+    # print(os.path.isfile(dirPath + filePath)) # print(os.path.isfile("C:\Git\game_map_processing\map0.txt"))
+    
+    # if os.path.isfile("maps/map0.txt"): # os.path.exists(output):
+    #     print("File exist!")
+    # else:
+    #     print("file isn't exist!")
+
+    # exit() # Stops the program
     
 def draw():
     # background(255)
@@ -129,7 +163,13 @@ def draw():
     global timeIt
     timeIt += 1
 
-    # if not timeIt % 60: # ones per second
+    global saveRes
+    if not timeIt % 60: # ones per second
+        # print("Iteration")
+        # saveRes = save(saveRes+1)
+        pass
+
+        
     #     x = random(0, width / fieldSize)
     #     y = random(0, height / fieldSize)
     #     # print(int(random(0, width / fieldSize)))
