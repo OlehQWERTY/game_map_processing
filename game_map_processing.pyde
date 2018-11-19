@@ -8,7 +8,7 @@ import time # pouse func
 #PrintWriter output
 
 timeIt = 0
-fieldSize = 100
+fieldSize = 25
 aList = [[], [], []] # posX posY matterial
 tool = 0 # chosen tool
 
@@ -31,12 +31,14 @@ def setup():
     global imgTree
     global imgLoad
     global imgSave
+    global imgDice
     
     imgBrokenGlass = loadImage("brokenGlass.png")
     imgStone = loadImage("stone.png")
     imgTree = loadImage("tree.png")
     imgLoad = loadImage("load.png")
     imgSave = loadImage("save.png")
+    imgDice = loadImage("dice.png")
 
 def gameField(): # draw fields
     stroke(127)
@@ -107,14 +109,18 @@ def mouse():
             if tPos == 5:
                 print("Load")
                 load()
-                
                 time.sleep(1)
             if tPos == 6:
                 print("Save")
                 global saveRes
                 saveRes = save(saveRes+1)
                 time.sleep(1)
-            
+            if tPos == 7:
+                print("Autogen")
+                global fieldSize
+                autogen(fieldSize) # (int(points ammount))
+                time.sleep(1)
+                
     elif mousePressed and (mouseButton == RIGHT):
         if checkElementInList(posX, posY):
             index = checkElementInList(posX, posY, True)
@@ -187,8 +193,6 @@ def load():
                         else:
                             aList[i/2].append(int(val))    
             i+=1
-            
-        
     else:
         print("Error: can't open mapload.txt or file doesn't exist!")
     
@@ -216,16 +220,39 @@ def save(i = 0):
         print("Saved")
         return i
     
-    # print(os.path.abspath(filePath)) # saves to C:\Users\Oleg\AppData\Local\Temp\game_map_processing1973036018282129998\maps\map0.txt
-    # print(dirPath + filePath)
-    # print(os.path.isfile(dirPath + filePath)) # print(os.path.isfile("C:\Git\game_map_processing\map0.txt"))
+        # print(os.path.abspath(filePath)) # saves to C:\Users\Oleg\AppData\Local\Temp\game_map_processing1973036018282129998\maps\map0.txt
+        # print(dirPath + filePath)
+        # print(os.path.isfile(dirPath + filePath)) # print(os.path.isfile("C:\Git\game_map_processing\map0.txt"))
+        
+        # if os.path.isfile("maps/map0.txt"): # os.path.exists(output):
+        #     print("File exist!")
+        # else:
+        #     print("file isn't exist!")
     
-    # if os.path.isfile("maps/map0.txt"): # os.path.exists(output):
-    #     print("File exist!")
-    # else:
-    #     print("file isn't exist!")
-
-    # exit() # Stops the program
+        # exit() # Stops the program
+    
+def autogen(i=0):
+    if(i > 0):
+        
+        posX = int(random(width/fieldSize))
+        posY = int(random((height - toolsZone)/fieldSize))
+        randColor = int(random(3))
+        
+        aList[0].append(posX)
+        aList[1].append(posY)
+        aList[2].append(randColor) # matterial
+        
+        print("posX[%d] = %d, posY[%d] = %d" % (i, posX, i, posY))
+        i-=1
+        autogen(i)
+    else:
+        return True
+    
+    return False
+        
+    
+    
+    
     
 def draw():
     # background(255)
@@ -235,6 +262,7 @@ def draw():
 
     global saveRes
     if not timeIt % 60: # ones per second
+        # autogen(10)
         # print("Iteration")
         # saveRes = save(saveRes+1)
         pass
@@ -257,6 +285,7 @@ def draw():
     global imgTree
     global imgLoad
     global imgSave
+    global imgDice
     
     image(imgBrokenGlass, 0, height - toolsZone, toolsZone, toolsZone)
     image(imgStone, toolsZone, height - toolsZone, toolsZone, toolsZone)
@@ -264,3 +293,4 @@ def draw():
     
     image(imgLoad, toolsZone * 5, height - toolsZone, toolsZone, toolsZone)
     image(imgSave, toolsZone * 6, height - toolsZone, toolsZone, toolsZone)
+    image(imgDice, toolsZone * 7, height - toolsZone, toolsZone, toolsZone)
