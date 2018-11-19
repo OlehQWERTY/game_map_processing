@@ -32,6 +32,7 @@ def setup():
     global imgLoad
     global imgSave
     global imgDice
+    global imgBin
     
     imgBrokenGlass = loadImage("brokenGlass.png")
     imgStone = loadImage("stone.png")
@@ -39,6 +40,7 @@ def setup():
     imgLoad = loadImage("load.png")
     imgSave = loadImage("save.png")
     imgDice = loadImage("dice.png")
+    imgBin = loadImage("bin.png")
 
 def gameField(): # draw fields
     stroke(127)
@@ -106,20 +108,21 @@ def mouse():
             # if tPos == 2:
             #     print("Wood")
             
+            if tPos == 4:
+                print("Clear")
+                clearList()                
             if tPos == 5:
                 print("Load")
                 load()
-                time.sleep(1)
             if tPos == 6:
                 print("Save")
                 global saveRes
                 saveRes = save(saveRes+1)
-                time.sleep(1)
             if tPos == 7:
                 print("Autogen")
-                global fieldSize
-                autogen(fieldSize) # (int(points ammount))
-                time.sleep(1)
+                autogen(fieldSize * 5) # (int(points ammount))
+                
+            time.sleep(1)
                 
     elif mousePressed and (mouseButton == RIGHT):
         if checkElementInList(posX, posY):
@@ -250,8 +253,13 @@ def autogen(i=0):
     
     return False
         
-    
-    
+def clearList(ammount = 0):
+    if ammount <= 0:
+        ammount = len(aList[0])
+
+    del aList[0][0:ammount]
+    del aList[1][0:ammount]
+    del aList[2][0:ammount]   
     
     
 def draw():
@@ -261,7 +269,7 @@ def draw():
     timeIt += 1
 
     global saveRes
-    if not timeIt % 60: # ones per second
+    if not timeIt % 120: # ones per second
         # autogen(10)
         # print("Iteration")
         # saveRes = save(saveRes+1)
@@ -286,11 +294,13 @@ def draw():
     global imgLoad
     global imgSave
     global imgDice
+    global imgBin
     
     image(imgBrokenGlass, 0, height - toolsZone, toolsZone, toolsZone)
     image(imgStone, toolsZone, height - toolsZone, toolsZone, toolsZone)
     image(imgTree, toolsZone * 2, height - toolsZone, toolsZone, toolsZone)
     
+    image(imgBin, toolsZone * 4, height - toolsZone, toolsZone, toolsZone)
     image(imgLoad, toolsZone * 5, height - toolsZone, toolsZone, toolsZone)
     image(imgSave, toolsZone * 6, height - toolsZone, toolsZone, toolsZone)
     image(imgDice, toolsZone * 7, height - toolsZone, toolsZone, toolsZone)
