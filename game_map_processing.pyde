@@ -6,13 +6,18 @@
 import os.path # cheacking whether file exist
 import time # pouse func
 #PrintWriter output
+# sys.setrecursionlimit(10000) # set recursion limit
+
 
 timeIt = 0
 fieldSize = 25
 aList = [[], [], []] # posX posY matterial
 tool = 0 # chosen tool
 
-materials = [[255, 0, 20], [0, 255, 20], [0, 20, 255]]
+# more than 3 (materials number) beacause of temp 
+# solution for error caused pressing toolbox pos > 3
+materials = [[255, 0, 20], [0, 255, 20], [0, 20, 255], [255, 0, 20], [255, 0, 20], [255, 0, 20], [255, 0, 20]] 
+
 saveRes = 0
 
 # print(aList)
@@ -120,7 +125,14 @@ def mouse():
                 saveRes = save(saveRes+1)
             if tPos == 7:
                 print("Autogen")
-                autogen(fieldSize * 5) # (int(points ammount))
+                clearList() # cleare map befor autogen
+                
+                # Undel this line it is possible to choose (uncomment) autogen algorithm. ONLY ONE per time!
+                
+                percentage = 40 # < 80 because of bug in connected with reccursion autogen()
+                
+                # autogen((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize)) # (int(points ammount))
+                autogenRandDirection(5, percentage) # (max length of points siquence, percentage(from 1 to 100))
                 
             time.sleep(1)
                 
@@ -234,8 +246,8 @@ def save(i = 0):
     
         # exit() # Stops the program
     
-def autogen(i=0):
-    if(i > 0):
+def autogen(i=0): # random points
+    if (i > 0) and (i < (width/fieldSize) * (height - toolsZone)/fieldSize):
         
         posX = int(random(width/fieldSize))
         posY = int(random((height - toolsZone)/fieldSize))
@@ -245,13 +257,57 @@ def autogen(i=0):
         aList[1].append(posY)
         aList[2].append(randColor) # matterial
         
-        print("posX[%d] = %d, posY[%d] = %d" % (i, posX, i, posY))
+        # print("posX[%d] = %d, posY[%d] = %d" % (i, posX, i, posY))
         i-=1
         autogen(i)
     else:
         return True
     
     return False
+
+def randDirection():
+    directions = [[-1, 1], [0, 1], [1, 1], \
+                      [-1, 0], [1, 0], \
+                      [-1, -1], [0, -1], [1, -1]]
+    return directions[int(random(len(directions)))]
+
+def autogenRandDirection(i=2, percentage = 20): # random direction; i - it is max of steps per one time
+    # print((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize))
+    if percentage >= 100: 
+        percentage = 100 
+        print("Percentage out of max range!")
+    elif percentage < 1:
+        percentage = 1
+        print("Percentage out of min range!")
+    else:
+        for n in range(int((percentage/i * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize))):
+            posX = int(random(width/fieldSize))
+            posY = int(random((height - toolsZone)/fieldSize))
+            randColor = int(random(3))
+            
+            # first point
+            aList[0].append(posX)
+            aList[1].append(posY)
+            aList[2].append(randColor) # matterial
+            
+            for m in range(i - 1):  # without firs point
+                direction = randDirection()
+                if checkElementInList(posX, posY, True):
+                    posX = posX + direction[0]
+                    posY = posY + direction[1]
+                    if posY >= (height - toolsZone)/fieldSize:
+                        posY=posY-1
+                    aList[0].append(posX)
+                    aList[1].append(posY)
+                    aList[2].append(randColor) # matterial
+                else:
+                #     i=i-1
+                    break
+                # print('n= ' + str(n) + ' posX= ' + str(posX) + ' posY= ' + str(posY) + ' randColor= ' + str(randColor))
+            # print(randDirection())
+        return True
+        
+    
         
 def clearList(ammount = 0):
     if ammount <= 0:
