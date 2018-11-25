@@ -45,7 +45,7 @@ def setup():
     imgLoad = loadImage("load.png")
     imgSave = loadImage("save.png")
     imgDice = loadImage("dice.png")
-    imgBin = loadImage("bin.png")
+    imgBin = loadImage("bin.png") # bin.png
 
 def gameField(): # draw fields
     stroke(127)
@@ -131,8 +131,8 @@ def mouse():
                 
                 percentage = 40 # < 80 because of bug in connected with reccursion autogen()
                 
-                # autogen((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize)) # (int(points ammount))
-                autogenRandDirection(5, percentage) # (max length of points siquence, percentage(from 1 to 100))
+                autogen((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize)) # (int(points ammount))
+                # autogenRandDirection(5, percentage) # (max length of points siquence, percentage(from 1 to 100))
                 
             time.sleep(1)
                 
