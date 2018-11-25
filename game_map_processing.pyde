@@ -129,10 +129,10 @@ def mouse():
                 
                 # Undel this line it is possible to choose (uncomment) autogen algorithm. ONLY ONE per time!
                 
-                percentage = 40 # < 80 because of bug in connected with reccursion autogen()
+                percentage = 30 # < 80 because of bug in connected with reccursion autogen()
                 
-                autogen((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize)) # (int(points ammount))
-                # autogenRandDirection(5, percentage) # (max length of points siquence, percentage(from 1 to 100))
+                # autogen((percentage * 0.01) * (width/fieldSize) * ((height - toolsZone)/fieldSize)) # (int(points ammount))
+                autogenRandDirection(8, percentage) # (max length of points siquence, percentage(from 1 to 100))
                 
             time.sleep(1)
                 
@@ -265,10 +265,16 @@ def autogen(i=0): # random points
     
     return False
 
-def randDirection():
-    directions = [[-1, 1], [0, 1], [1, 1], \
+def randDirection(flag = True):
+    if flag == True:
+        directions = [[-1, 1], [0, 1], [1, 1], \
                       [-1, 0], [1, 0], \
                       [-1, -1], [0, -1], [1, -1]]
+    else:
+        directions = [[0, 1], \
+                      [-1, 0], [1, 0], \
+                      [0, -1]]
+        
     return directions[int(random(len(directions)))]
 
 def autogenRandDirection(i=2, percentage = 20): # random direction; i - it is max of steps per one time
@@ -291,7 +297,7 @@ def autogenRandDirection(i=2, percentage = 20): # random direction; i - it is ma
             aList[2].append(randColor) # matterial
             
             for m in range(i - 1):  # without firs point
-                direction = randDirection()
+                direction = randDirection(False) # can be called with True key (True - <, >, ^, v False - 8 directions)
                 if checkElementInList(posX, posY, True):
                     posX = posX + direction[0]
                     posY = posY + direction[1]
